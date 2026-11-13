@@ -638,3 +638,15 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-radius: 4px; text-
 }
 
 .trophies { overscroll-behavior: contain; }
+
+/* achievement icons: dim while locked (they hint where to look), accent once earned */
+.trophies__list li { grid-template-columns: 2rem 1fr auto; }
+.trophies__list li iconify-icon { grid-row: 1 / span 2; align-self: center; font-size: 1.35rem; color: var(--bone-dim); opacity: 0.55; }
+.trophies__list li.is-got iconify-icon { color: var(--accent); opacity: 1; }
+.trophies__list li span { grid-column: 3; }
+.trophies__list li strong, .trophies__list li small { grid-column: 2; }
+.toast { grid-template-columns: auto 1fr auto; }
+.toast iconify-icon { grid-row: 1 / span 3; align-self: center; font-size: 1.8rem; color: var(--accent); margin-right: 4px; }
+.toast span { grid-column: 2 / -1; }
+.toast strong, .toast small { grid-column: 2; }
+.toast b { grid-column: 3; }

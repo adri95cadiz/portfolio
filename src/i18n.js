@@ -5,6 +5,7 @@ export const lang = document.documentElement.lang === 'en' ? 'en' : 'es';
 /** JS-generated strings, both languages. */
 const STRINGS = {
   es: {
+    'ach.start.h': 'Baja con el scroll.', 'ach.boss.h': 'Alguien vigila desde una foto.', 'ach.tuner.h': 'Prueba todas las formas de onda.', 'ach.beat.h': 'Hay una máquina esperando al play.', 'ach.producer.h': 'Programa tus propios pasos en la caja de ritmos.', 'ach.glitch.h': 'Lleva el glitch al límite.', 'ach.pilot.h': 'Supera los 100 puntos en el arcade.', 'ach.explorer.h': 'Visita todos los capítulos.', 'ach.demolition.h': 'Haz clic en el fondo. Varias veces.', 'ach.konami.h': 'El código más famoso de los videojuegos. Con el teclado.', 'ach.contact.h': 'Escríbeme desde el formulario.',
     'ach.unlocked': 'Logro desbloqueado', 'ach.locked': 'Bloqueado', 'ach.keep': 'Sigue explorando.',
     'ach.start.t': 'Pulsa Start', 'ach.start.d': 'Empezaste el viaje.',
     'ach.boss.t': 'Jefe de proyecto', 'ach.boss.d': 'Saludaste al perro.',
@@ -34,6 +35,7 @@ const STRINGS = {
     'lcd.msgs': 'Compilando ideas|Café nº 3|174 BPM en bucle|Respondo en 24 h|Perro: dormido|Sin bugs (creo)', 'lcd.coords': '40.4°N 3.7°W',
   },
   en: {
+    'ach.start.h': 'Scroll down.', 'ach.boss.h': 'Someone is watching from a photo.', 'ach.tuner.h': 'Try every waveform.', 'ach.beat.h': 'A machine is waiting for play.', 'ach.producer.h': 'Program your own steps on the drum machine.', 'ach.glitch.h': 'Push the glitch to the limit.', 'ach.pilot.h': 'Score over 100 in the arcade.', 'ach.explorer.h': 'Visit every chapter.', 'ach.demolition.h': 'Click the background. A few times.', 'ach.konami.h': 'The most famous cheat code in video games. On your keyboard.', 'ach.contact.h': 'Send me a message from the form.',
     'ach.unlocked': 'Achievement unlocked', 'ach.locked': 'Locked', 'ach.keep': 'Keep exploring.',
     'ach.start.t': 'Press Start', 'ach.start.d': 'You started the journey.',
     'ach.boss.t': 'Project manager', 'ach.boss.d': 'You said hi to the dog.',

@@ -4,9 +4,23 @@ import { t } from './i18n.js';
 const STORAGE_KEY = 'ap-logros';
 const TOAST_MS = 3600;
 
-const XP = { start: 10, boss: 20, tuner: 30, beat: 20, producer: 30, glitch: 30, pilot: 50, explorer: 40, demolition: 40, konami: 50, contact: 100 };
-export const ACHIEVEMENTS = Object.entries(XP).map(([id, xp]) => ({
-  id, xp, get title() { return t(`ach.${id}.t`); }, get desc() { return t(`ach.${id}.d`); },
+// xp + an icon that hints at where each one is earned (shown even while locked)
+const LIST = {
+  start: [10, 'solar:play-circle-linear'],
+  boss: [20, 'ph:paw-print-fill'],
+  tuner: [30, 'solar:soundwave-linear'],
+  beat: [20, 'solar:music-notes-bold'],
+  producer: [30, 'solar:widget-4-linear'],
+  glitch: [30, 'solar:tuning-2-linear'],
+  pilot: [50, 'solar:gamepad-bold'],
+  explorer: [40, 'solar:map-point-wave-linear'],
+  demolition: [40, 'solar:target-linear'],
+  konami: [50, 'solar:keyboard-linear'],
+  contact: [100, 'solar:letter-linear'],
+};
+export const ACHIEVEMENTS = Object.entries(LIST).map(([id, [xp, icon]]) => ({
+  id, xp, icon,
+  get title() { return t(`ach.${id}.t`); }, get desc() { return t(`ach.${id}.d`); }, get hint() { return t(`ach.${id}.h`); },
 }));
 const TOTAL_XP = ACHIEVEMENTS.reduce((n, a) => n + a.xp, 0);
 
@@ -34,9 +48,9 @@ export function createAchievements() {
       const li = document.createElement('li');
       const got = unlocked.has(a.id);
       li.className = got ? 'is-got' : '';
-      li.innerHTML = `<span class="mono">${got ? `+${a.xp} XP` : t('ach.locked')}</span><strong></strong><small></small>`;
+      li.innerHTML = `<iconify-icon icon="${a.icon}" aria-hidden="true"></iconify-icon><span class="mono">${got ? `+${a.xp} XP` : t('ach.locked')}</span><strong></strong><small></small>`;
       li.querySelector('strong').textContent = got ? a.title : '???';
-      li.querySelector('small').textContent = got ? a.desc : t('ach.keep');
+      li.querySelector('small').textContent = got ? a.desc : a.hint;
       return li;
     }));
   }
@@ -44,7 +58,7 @@ export function createAchievements() {
   function toast(a) {
     const el = document.createElement('div');
     el.className = 'toast';
-    el.innerHTML = '<span class="mono"></span><strong></strong><small></small><b class="mono"></b>';
+    el.innerHTML = `<iconify-icon icon="${a.icon}" aria-hidden="true"></iconify-icon><span class="mono"></span><strong></strong><small></small><b class="mono"></b>`;
     el.querySelector('span').textContent = t('ach.unlocked');
     el.querySelector('strong').textContent = a.title;
     el.querySelector('small').textContent = a.desc;
