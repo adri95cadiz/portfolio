@@ -48,7 +48,7 @@ Copy `.env.example` to `.env`:
 | Variable | Purpose |
 |---|---|
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | SMTP account for the contact form (Gmail: use an App Password) |
-| `CONTACT_TO`, `CONTACT_FROM` | Where messages arrive and the sender address |
+| `CONTACT_TO`, `CONTACT_FROM` | Optional. Inbox and sender address, both default to `SMTP_USER` (the visitor's email goes in Reply-To) |
 | `SITE_URL` | Public URL without a trailing slash; enables absolute `canonical`/`hreflang`/`og:image` and `sitemap.xml` |
 
 ## Deploy

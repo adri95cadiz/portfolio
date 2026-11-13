@@ -38,8 +38,9 @@ export function validate(input) {
 
 function readConfig() {
   const { SMTP_HOST, SMTP_PORT = '465', SMTP_USER, SMTP_PASS, CONTACT_TO, CONTACT_FROM } = process.env;
-  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS || !CONTACT_TO) return null;
-  return { host: SMTP_HOST, port: Number(SMTP_PORT), user: SMTP_USER, pass: SMTP_PASS, to: CONTACT_TO, from: CONTACT_FROM || SMTP_USER };
+  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;
+  // messages go to your own inbox unless CONTACT_TO says otherwise; From must be your account (the visitor goes in Reply-To)
+  return { host: SMTP_HOST, port: Number(SMTP_PORT), user: SMTP_USER, pass: SMTP_PASS, to: CONTACT_TO || SMTP_USER, from: CONTACT_FROM || SMTP_USER };
 }
 
 async function readBody(req) {
@@ -77,7 +78,7 @@ export default async function handler(req, res) {
 
   const cfg = readConfig();
   if (!cfg) {
-    console.error('[contact] SMTP env vars missing (SMTP_HOST, SMTP_USER, SMTP_PASS, CONTACT_TO)');
+    console.error('[contact] SMTP env vars missing (SMTP_HOST, SMTP_USER, SMTP_PASS)');
     return send(res, 500, { ok: false, error: 'El formulario no está configurado ahora mismo.' });
   }
 
