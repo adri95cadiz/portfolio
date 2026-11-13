@@ -27,7 +27,7 @@ export const PAGE_EN = [
   ['#capacidades', { attr: { 'data-name': 'Skills' } }],
   ['#hablemos', { attr: { 'data-name': 'Let’s talk' } }],
 
-  ['.hero__lcd', { html: '<span class="visually-hidden">Open for projects, based in Cádiz, Spain.</span><span class="hero__lcd-k" aria-hidden="true">Status</span><span data-lcd="msg" aria-hidden="true">Open for projects</span><span class="hero__lcd-k hero__city" aria-hidden="true">Loc</span><span class="hero__city" data-lcd="loc" aria-hidden="true">Cádiz · ES</span><span class="hero__cursor" aria-hidden="true"></span>' }],
+  ['.hero__lcd', { html: '<span class="visually-hidden">Open for projects, based in Spain.</span><span class="hero__lcd-k" aria-hidden="true">Status</span><span data-lcd="msg" aria-hidden="true">Open for projects</span><span class="hero__lcd-k hero__city" aria-hidden="true">Loc</span><span class="hero__city" data-lcd="loc" aria-hidden="true">Spain</span><span class="hero__cursor" aria-hidden="true"></span>' }],
   ['#hero-title', { attr: { 'aria-label': 'I build software that moves.' } }],
   ['.hero__line:not([data-signal-anchor])', { html: '<span class="w"><span>I</span></span> <span class="w"><span>build</span></span> <span class="w"><span>software</span></span>' }],
   ['[data-signal-anchor]', { html: '<span class="w"><span>that</span></span> <span class="w"><span class="glitch" data-text="moves.">moves.</span></span>' }],
@@ -111,7 +111,7 @@ export const PAGE_EN = [
 export const META = {
   es: {
     title: 'Adrián Portillo — Desarrollo de software, datos y 3D',
-    desc: 'Adrián Portillo Sánchez, Lead Front-End en Satinel System (Go!Planner) y creador de productos SaaS. Desarrollo web, apps a medida, datos e IA. Cádiz, España.',
+    desc: 'Adrián Portillo Sánchez, Lead Front-End en Satinel System (Go!Planner) y creador de productos SaaS. Desarrollo web, apps a medida, datos e IA. España.',
     ogTitle: 'Adrián Portillo — Señal',
     ogDesc: 'Un recorrido en 3D por lo que construyo: SaaS, logística, IA, música.',
     ogAlt: 'Construyo software que se mueve: una señal de osciloscopio cruza el titular y dibuja el logo AP de Adrián Portillo.',
@@ -119,7 +119,7 @@ export const META = {
   },
   en: {
     title: 'Adrián Portillo — Software, data and 3D',
-    desc: 'Adrián Portillo Sánchez, Lead Front-End at Satinel System (Go!Planner) and SaaS builder. Web platforms, custom apps, data and AI. Cádiz, Spain.',
+    desc: 'Adrián Portillo Sánchez, Lead Front-End at Satinel System (Go!Planner) and SaaS builder. Web platforms, custom apps, data and AI. Spain.',
     ogTitle: 'Adrián Portillo — Signal',
     ogDesc: 'A 3D journey through what I build: SaaS, logistics, AI, music.',
     ogAlt: 'I build software that moves: an oscilloscope signal crosses the headline and draws Adrián Portillo’s AP logo.',

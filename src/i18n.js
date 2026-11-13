@@ -31,7 +31,7 @@ const STRINGS = {
     'form.sending': 'Enviando…', 'form.ok': '¡Recibido! Te respondo en cuanto lo lea, normalmente en 24–48 h.',
     'form.rate': 'Demasiados envíos seguidos. Prueba en unos minutos.', 'form.fail': 'No he podido enviar el mensaje.',
     'form.fallback': 'Escríbeme a', 'spotify.title': 'Reproductor de Spotify de Athetosis', 'spotify.open': 'Abrir en Spotify',
-    'lcd.msgs': 'Compilando ideas|Café nº 3|174 BPM en bucle|Respondo en 24 h|Perro: dormido|Sin bugs (creo)', 'lcd.coords': '36.5°N 6.3°W',
+    'lcd.msgs': 'Compilando ideas|Café nº 3|174 BPM en bucle|Respondo en 24 h|Perro: dormido|Sin bugs (creo)', 'lcd.coords': '40.4°N 3.7°W',
   },
   en: {
     'ach.unlocked': 'Achievement unlocked', 'ach.locked': 'Locked', 'ach.keep': 'Keep exploring.',
@@ -60,7 +60,7 @@ const STRINGS = {
     'form.sending': 'Sending…', 'form.ok': 'Got it! I’ll reply as soon as I read it, usually within 24–48 h.',
     'form.rate': 'Too many messages in a row. Try again in a few minutes.', 'form.fail': 'I couldn’t send your message.',
     'form.fallback': 'Write to me at', 'spotify.title': 'Athetosis Spotify player', 'spotify.open': 'Open in Spotify',
-    'lcd.msgs': 'Compiling ideas|Coffee no. 3|174 BPM on loop|Replies within 24 h|Dog: asleep|No bugs (I think)', 'lcd.coords': '36.5°N 6.3°W',
+    'lcd.msgs': 'Compiling ideas|Coffee no. 3|174 BPM on loop|Replies within 24 h|Dog: asleep|No bugs (I think)', 'lcd.coords': '40.4°N 3.7°W',
   },
 };
 
