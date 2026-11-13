@@ -111,10 +111,18 @@ function i18nSeo(site) {
   };
 }
 
+/** 'example.dev' or 'https://example.dev/' -> 'https://example.dev'; '' stays '' (relative URLs). */
+export function normaliseSite(raw) {
+  const v = raw.trim().replace(/\/+$/, '');
+  if (!v) return '';
+  const url = new URL(/^https?:\/\//i.test(v) ? v : `https://${v}`);
+  return url.origin;
+}
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, ROOT, '');
   Object.assign(process.env, env); // SMTP_* for the dev contact API
-  const site = (env.SITE_URL || '').replace(/\/$/, '');
+  const site = normaliseSite(env.SITE_URL || env.VERCEL_PROJECT_PRODUCTION_URL || '');
   return {
     plugins: [i18nSeo(site), devApi()],
     preview: { headers: { ...PROD_HEADERS, 'Content-Security-Policy': PREVIEW_CSP } },
