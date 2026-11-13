@@ -104,6 +104,7 @@ export const PAGE_EN = [
   ['.field:has([name="mensaje"]) > span', { html: 'The project' }],
   ['[name="mensaje"]', { attr: { placeholder: 'What you want to build, who it’s for and when you need it.' } }],
   ['.form button[type="submit"]', { html: 'Send <iconify-icon icon="solar:plain-2-linear" aria-hidden="true"></iconify-icon>' }],
+  ['.footer p:first-child', { html: '© <span data-year>2026</span> Adrián Portillo Sánchez · Spain' }],
   ['.footer p:last-child', { html: 'Handmade with Three.js, GSAP and Lenis. No templates. <a href="https://github.com/adri95cadiz/portfolio" target="_blank" rel="noopener">Source on GitHub</a> · <a href="/legal/en/">Legal notice and privacy</a>' }],
 ];
 
