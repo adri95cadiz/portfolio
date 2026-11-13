@@ -28,6 +28,7 @@ Plus a probe cursor, click-to-shoot (breakable wireframe props and terrain shock
 Vite · Three.js (custom shaders) · GSAP + ScrollTrigger · Lenis · Web Audio · Canvas 2D · nodemailer on Vercel Functions. No UI framework.
 
 - **Fonts and icons are self-hosted** (Fontsource, Iconify subset): no requests to third parties until you choose to load the Spotify player.
+- **Vercel Web Analytics + Speed Insights**: cookieless and same-origin (`/_vercel/...`), so the strict CSP stays intact.
 - **Two real pages for SEO**: `/en/index.html` is generated at build time from `index.html` + `src/i18n-page.js`, with `canonical`, `hreflang` and a sitemap.
 - **Respects `prefers-reduced-motion`**: static poster instead of WebGL, no smooth scroll or scrubbed animations.
 - Strict CSP and security headers in [`vercel.json`](vercel.json), and the same headers in `vite preview` so they can be tested locally.

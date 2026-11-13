@@ -4,6 +4,9 @@ import '@fontsource-variable/anybody/wdth-italic.css';
 import '@fontsource-variable/martian-mono/wdth.css';
 import { addCollection } from 'iconify-icon';
 import icons from './icons.json';
+// Vercel Web Analytics + Speed Insights: cookieless, aggregated, served from this same origin (/_vercel/...)
+import { inject as injectAnalytics } from '@vercel/analytics';
+import { injectSpeedInsights } from '@vercel/speed-insights';
 import { gsap, ScrollTrigger, splitWords, startSmoothScroll, heroIntro, chapterReveals, trackChapters } from './motion.js';
 import { mountMachine } from './machine-ui.js';
 import { mountGame } from './game.js';
@@ -205,6 +208,7 @@ function initEasterEggs() {
 }
 
 function init() {
+  if (!new URLSearchParams(location.search).has('og')) { injectAnalytics(); injectSpeedInsights(); } // not in share-image captures
   if (new URLSearchParams(location.search).has('og')) root.classList.add('is-og'); // share-image capture mode
   document.querySelector('[data-year]').textContent = new Date().getFullYear();
   initLangSwitch();
