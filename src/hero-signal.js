@@ -9,7 +9,29 @@ const GHOST = [[-7, -3, '#9be7c4'], [7, 3, '#ff2e63']];
 const GRADIENT = [[0, '#ff5b1f'], [0.55, '#ff2e63'], [1, '#c79bff']];
 const MAX_DPR = 2;
 const PLUCK_DECAY = 2.4;
-const STEP = 4; // px between wave samples
+const STEP = 5; // px between wave samples
+const LOGO_SAMPLES = 260;
+const BEAM_PERIOD = 3.2; // seconds for the light beam to run the whole signal
+const BEAM_LEN = 0.016; // fraction of the trace lit by the beam
+
+/** Samples the logo path into points (logo units) by arc length, so it can be drawn progressively. */
+function sampleLogo(d) {
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('width', '0'); svg.setAttribute('height', '0'); svg.setAttribute('aria-hidden', 'true');
+  svg.style.position = 'absolute';
+  const path = document.createElementNS(ns, 'path');
+  path.setAttribute('d', d);
+  svg.append(path);
+  document.body.append(svg); // some engines only measure attached paths
+  const total = path.getTotalLength();
+  const pts = Array.from({ length: LOGO_SAMPLES + 1 }, (_, i) => {
+    const p = path.getPointAtLength((total * i) / LOGO_SAMPLES);
+    return [p.x, p.y];
+  });
+  svg.remove();
+  return pts;
+}
 
 /**
  * @param {HTMLElement} hero section element
@@ -22,7 +44,7 @@ export function mountHeroSignal(hero, { reduceMotion }) {
   const freqOut = hero.querySelector('[data-readout="freq"]');
   const ampOut = hero.querySelector('[data-readout="amp"]');
   const g = canvas.getContext('2d');
-  const logo = new Path2D(document.querySelector('.logo .l-main').getAttribute('d'));
+  const logoPts = sampleLogo(document.querySelector('.logo .l-main').getAttribute('d'));
 
   const state = { reveal: reduceMotion ? 1 : 0 };
   const geo = { w: 0, h: 0, s: 1, ox: 0, oy: 0 };
@@ -63,66 +85,96 @@ export function mountHeroSignal(hero, { reduceMotion }) {
   const toY = (u) => geo.oy + u * geo.s;
   const bump = (x) => ptr.energy * Math.exp(-(((x - ptr.x) / 140) ** 2));
 
-  /** Lead-in (left) and tail (right) as polylines; the middle is the logo itself. */
-  function wavePath(from, to, y0, side) {
-    const p = new Path2D();
-    const span = Math.abs(to - from) || 1;
-    const base = 3 * geo.s * (1 + audio * 4);
-    for (let x = from; side > 0 ? x <= to : x >= to; x += STEP * side) {
-      const d = Math.abs(x - from) / span; // 0 at the logo, 1 at the screen edge
-      const env = side > 0 ? Math.min(1, d * 6) : Math.min(1, d * 3);
-      const amp = (side > 0 ? 9 * geo.s : base) * (1 + audio * 3) + bump(x) * 46 + pluck * 70 * Math.exp(-d * 2);
-      const k = side > 0 ? 0.018 / geo.s * 2 : 0.05;
-      const y = y0 + env * (side > 0
-        ? Math.sin(Math.abs(x - from) * k - t * 4) * amp
-        : (Math.sin(x * k + t * 6) * 0.6 + Math.sin(x * 0.013 - t * 2.3) * 0.4) * amp);
-      if (x === from) p.moveTo(x, y); else p.lineTo(x, y);
+  // One continuous trace, left to right: wavy lead-in -> the AP mark -> sine tail. Built as points with
+  // cumulative length so it can be drawn *along* its path (like a pen) and a beam can run over it.
+  const xs = []; const ys = []; const cum = [];
+  function buildTrace() {
+    xs.length = 0; ys.length = 0; cum.length = 0;
+    const lx0 = toX(LOGO_UNITS.x0);
+    const base = toY(LOGO_UNITS.base);
+    for (let x = 0; x < lx0; x += STEP) {
+      const d = 1 - x / lx0; // 1 at the screen edge, 0 at the logo
+      const env = Math.min(1, d * 3);
+      const amp = 3 * geo.s * (1 + audio * 4) * (1 + audio * 3) + bump(x) * 46 + pluck * 70 * Math.exp(-d * 2);
+      xs.push(x);
+      ys.push(base + env * (Math.sin(x * 0.05 + t * 6) * 0.6 + Math.sin(x * 0.013 - t * 2.3) * 0.4) * amp);
     }
+    for (const [ux, uy] of logoPts) { xs.push(toX(ux)); ys.push(toY(uy)); }
+    const tx0 = toX(LOGO_UNITS.x1);
+    const ty0 = toY(LOGO_UNITS.tailY);
+    const span = geo.w + 10 - tx0 || 1;
+    for (let x = tx0 + STEP; x <= geo.w + 10; x += STEP) {
+      const d = (x - tx0) / span;
+      const amp = 9 * geo.s * (1 + audio * 3) + bump(x) * 46 + pluck * 70 * Math.exp(-d * 2);
+      xs.push(x);
+      ys.push(ty0 + Math.min(1, d * 6) * Math.sin((x - tx0) * (0.036 / geo.s) - t * 4) * amp);
+    }
+    let len = 0;
+    for (let i = 0; i < xs.length; i++) {
+      if (i) len += Math.hypot(xs[i] - xs[i - 1], ys[i] - ys[i - 1]);
+      cum.push(len);
+    }
+  }
+
+  /** Index of the last point at or before length `l` (binary search). */
+  function indexAt(l) {
+    let lo = 0; let hi = cum.length - 1;
+    while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (cum[mid] <= l) lo = mid; else hi = mid - 1; }
+    return lo;
+  }
+  function pointAt(l) {
+    const i = Math.min(indexAt(l), cum.length - 2);
+    const f = (l - cum[i]) / ((cum[i + 1] - cum[i]) || 1);
+    return [xs[i] + (xs[i + 1] - xs[i]) * f, ys[i] + (ys[i + 1] - ys[i]) * f];
+  }
+  /** The part of the trace between lengths a and b. */
+  function segment(a, b) {
+    const p = new Path2D();
+    const [sx, sy] = pointAt(a);
+    p.moveTo(sx, sy);
+    for (let i = indexAt(a) + 1; i < cum.length && cum[i] < b; i++) p.lineTo(xs[i], ys[i]);
+    const [ex, ey] = pointAt(b);
+    p.lineTo(ex, ey);
     return p;
   }
 
-  function stroke(paths, color, dx, dy, widthPx) {
+  function stroke(path, color, dx, dy, width) {
     g.save();
     g.translate(dx, dy);
     g.strokeStyle = color;
-    g.lineWidth = widthPx;
+    g.lineWidth = width;
     g.lineCap = 'round';
     g.lineJoin = 'round';
-    for (const p of paths) g.stroke(p);
-    g.save();
-    g.translate(geo.ox, geo.oy);
-    g.scale(geo.s, geo.s);
-    g.lineWidth = STROKE * WEIGHT;
-    g.stroke(logo);
-    g.restore();
+    g.stroke(path);
     g.restore();
   }
 
   function draw() {
     g.clearRect(0, 0, geo.w, geo.h);
-    if (state.reveal <= 0) return;
-    const sweep = state.reveal * (geo.w + 40);
-    g.save();
-    g.beginPath(); g.rect(0, 0, sweep, geo.h); g.clip();
-
-    const lead = wavePath(toX(LOGO_UNITS.x0), 0, toY(LOGO_UNITS.base), -1);
-    const tail = wavePath(toX(LOGO_UNITS.x1), geo.w + 10, toY(LOGO_UNITS.tailY), 1);
+    if (state.reveal <= 0 || !logoPts.length) return;
+    buildTrace();
+    const total = cum[cum.length - 1];
+    const upTo = Math.min(total, state.reveal * total);
+    const path = segment(0, upTo);
     const px = STROKE * WEIGHT * geo.s;
-    for (const [dx, dy, c] of GHOST) stroke([lead, tail], c, dx * geo.s, dy * geo.s, px);
+    for (const [dx, dy, c] of GHOST) stroke(path, c, dx * geo.s, dy * geo.s, px);
     const grad = g.createLinearGradient(0, 0, geo.w, 0);
     const gx0 = toX(LOGO_UNITS.x0) / geo.w;
     const gx1 = toX(LOGO_UNITS.x1) / geo.w;
-    for (const [o, c] of GRADIENT) grad.addColorStop(Math.min(1, gx0 + o * (gx1 - gx0)), c);
-    stroke([lead, tail], grad, 0, 0, px);
-    g.restore();
+    for (const [o, c] of GRADIENT) grad.addColorStop(Math.min(1, Math.max(0, gx0 + o * (gx1 - gx0))), c);
+    stroke(path, grad, 0, 0, px);
 
-    if (state.reveal < 1) { // phosphor beam at the sweep head
+    g.shadowColor = '#ff2e63';
+    g.shadowBlur = 18;
+    if (state.reveal < 1) { // the pen tip while drawing
+      const [hx, hy] = pointAt(upTo);
       g.fillStyle = '#ece6da';
-      g.shadowColor = '#ff5b1f';
-      g.shadowBlur = 24;
-      g.beginPath(); g.arc(sweep, toY(LOGO_UNITS.base), px * 0.55, 0, Math.PI * 2); g.fill();
-      g.shadowBlur = 0;
+      g.beginPath(); g.arc(hx, hy, px * 0.45, 0, Math.PI * 2); g.fill();
+    } else if (!reduceMotion) { // a beam that keeps running along the signal
+      const a = ((t % BEAM_PERIOD) / BEAM_PERIOD) * total;
+      stroke(segment(a, Math.min(total, a + total * BEAM_LEN)), '#ece6da', 0, 0, px * 0.42);
     }
+    g.shadowBlur = 0;
   }
 
   function frame(ts) {
