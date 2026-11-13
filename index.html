@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adrián Portillo — Desarrollo de software, datos y 3D</title>
+  <meta name="description" content="Adrián Portillo Sánchez, Lead Front-End en Satinel System (Go!Planner) y creador de productos SaaS. Desarrollo web, apps a medida, datos e IA. Cádiz, España." />
+  <meta property="og:title" content="Adrián Portillo — Señal" />
+  <meta property="og:description" content="Un recorrido en 3D por lo que construyo: SaaS, logística, IA, música." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Construyo software que se mueve: una señal de osciloscopio cruza el titular y dibuja el logo AP de Adrián Portillo." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#0c0d10" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <!-- tiny, synchronous on purpose: picks /, or /en/ by browser language before anything paints -->
+  <script src="/lang-redirect.js"></script>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+
+  <!-- 3D stage: one responsibility — the scroll-driven "signal" journey. Poster shows when WebGL/motion is unavailable. -->
+  <div class="stage" aria-hidden="true">
+    <div class="stage__poster"></div>
+    <canvas class="stage__canvas"></canvas>
+    <div class="stage__grain"></div>
+  </div>
+
+  <header class="nav">
+    <a class="nav__mark" href="#top" aria-label="Adrián Portillo, inicio">
+      <svg class="logo" viewBox="-14 26 232 200" aria-hidden="true"><defs><linearGradient id="nav-grad" x1="8" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ff5b1f"/><stop offset=".55" stop-color="#ff2e63"/><stop offset="1" stop-color="#c79bff"/></linearGradient></defs><path class="l-ghost l-ghost--a" d="M8 152 H57.6 L86 46 L129.4 208 V48 C133.8 50.4 138.4 52.8 142.7 55.2 C147.0 57.6 151.4 60.0 155.4 62.4 C159.5 64.8 163.4 67.2 167.0 69.6 C170.6 72.0 174.0 74.4 177.0 76.8 C179.9 79.2 182.6 81.6 184.8 84.0 C187.0 86.4 188.9 88.8 190.3 91.2 C191.6 93.6 192.6 96.0 193.0 98.4 C193.5 100.8 193.5 103.2 193.0 105.6 C192.6 108.0 191.6 110.4 190.3 112.8 C188.9 115.2 187.0 117.6 184.8 120.0 C182.6 122.4 179.9 124.8 177.0 127.2 C174.0 129.6 170.3 132.0 167.0 134.4 C154.0 143.9 150.0 178.0 190.0 176.0" fill="none" stroke-width="22" stroke-linejoin="round" stroke-linecap="round" stroke="#9be7c4" transform="translate(-7 -3)"/><path class="l-ghost l-ghost--b" d="M8 152 H57.6 L86 46 L129.4 208 V48 C133.8 50.4 138.4 52.8 142.7 55.2 C147.0 57.6 151.4 60.0 155.4 62.4 C159.5 64.8 163.4 67.2 167.0 69.6 C170.6 72.0 174.0 74.4 177.0 76.8 C179.9 79.2 182.6 81.6 184.8 84.0 C187.0 86.4 188.9 88.8 190.3 91.2 C191.6 93.6 192.6 96.0 193.0 98.4 C193.5 100.8 193.5 103.2 193.0 105.6 C192.6 108.0 191.6 110.4 190.3 112.8 C188.9 115.2 187.0 117.6 184.8 120.0 C182.6 122.4 179.9 124.8 177.0 127.2 C174.0 129.6 170.3 132.0 167.0 134.4 C154.0 143.9 150.0 178.0 190.0 176.0" fill="none" stroke-width="22" stroke-linejoin="round" stroke-linecap="round" stroke="#ff2e63" transform="translate(7 3)"/><path class="l-main" pathLength="100" d="M8 152 H57.6 L86 46 L129.4 208 V48 C133.8 50.4 138.4 52.8 142.7 55.2 C147.0 57.6 151.4 60.0 155.4 62.4 C159.5 64.8 163.4 67.2 167.0 69.6 C170.6 72.0 174.0 74.4 177.0 76.8 C179.9 79.2 182.6 81.6 184.8 84.0 C187.0 86.4 188.9 88.8 190.3 91.2 C191.6 93.6 192.6 96.0 193.0 98.4 C193.5 100.8 193.5 103.2 193.0 105.6 C192.6 108.0 191.6 110.4 190.3 112.8 C188.9 115.2 187.0 117.6 184.8 120.0 C182.6 122.4 179.9 124.8 177.0 127.2 C174.0 129.6 170.3 132.0 167.0 134.4 C154.0 143.9 150.0 178.0 190.0 176.0" fill="none" stroke-width="22" stroke-linejoin="round" stroke-linecap="round" stroke="url(#nav-grad)"/></svg>
+      <span class="nav__name">Adrián<br />Portillo</span>
+    </a>
+    <nav aria-label="Capítulos">
+      <ul class="nav__links">
+        <li><a href="#origen">Origen</a></li>
+        <li><a href="#oficio">Oficio</a></li>
+        <li><a href="#laboratorio">Laboratorio</a></li>
+        <li><a href="#capacidades">Capacidades</a></li>
+        <li><a href="#athetosis">Athetosis</a></li>
+        <li><a href="#arcade">Arcade</a></li>
+      </ul>
+    </nav>
+    <div class="lang" role="group" aria-label="Idioma" data-active="es">
+      <a href="/" hreflang="es" lang="es" aria-current="page">ES</a><a href="/en/" hreflang="en" lang="en">EN</a>
+    </div>
+    <button class="trophy" type="button" aria-label="Ver logros">
+      <iconify-icon icon="solar:cup-star-bold" aria-hidden="true"></iconify-icon>
+      <span class="mono" data-xp>0/11</span>
+      <span class="trophy__bar" aria-hidden="true"><i></i></span>
+    </button>
+    <a class="btn btn--small" href="#hablemos">Hablemos</a>
+  </header>
+
+  <div class="toasts" role="status" aria-live="polite"></div>
+  <dialog class="trophies" aria-labelledby="trophies-title">
+    <div class="trophies__head">
+      <h2 id="trophies-title">Logros</h2>
+      <button type="button" class="btn btn--small btn--ghost" data-close>Cerrar</button>
+    </div>
+    <p class="mono">Explora, toca, juega. Hay alguno escondido.</p>
+    <ol class="trophies__list"></ol>
+  </dialog>
+
+  <aside class="hud" aria-hidden="true">
+    <span class="hud__ch">00</span>
+    <span class="hud__bar"><i></i></span>
+    <span class="hud__name">Señal</span>
+  </aside>
+
+  <main id="main">
+    <!-- 00 HERO -->
+    <section class="hero chapter" id="top" data-accent="#ff5b1f" data-ch="00" data-name="Señal" aria-labelledby="hero-title">
+      <canvas class="hero__signal" aria-hidden="true"></canvas>
+      <div class="hero__scope" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <p class="hero__eyebrow hero__lcd mono"><span class="visually-hidden">Abierto a proyectos, desde Cádiz.</span><span class="hero__lcd-k" aria-hidden="true">Estado</span><span data-lcd="msg" aria-hidden="true">Abierto a proyectos</span><span class="hero__lcd-k hero__city" aria-hidden="true">Loc</span><span class="hero__city" data-lcd="loc" aria-hidden="true">Cádiz · ES</span><span class="hero__cursor" aria-hidden="true"></span></p>
+      <h1 id="hero-title" class="hero__title" aria-label="Construyo software que se mueve.">
+        <span class="hero__line" aria-hidden="true"><span class="w"><span>Construyo</span></span> <span class="w"><span>software</span></span></span>
+        <span class="hero__line" aria-hidden="true" data-signal-anchor><span class="w"><span>que</span></span> <span class="w"><span>se</span></span> <span class="w"><span class="glitch" data-text="mueve.">mueve.</span></span></span>
+      </h1>
+      <div class="hero__foot">
+        <p class="hero__lede"><strong>Adrián Portillo</strong>. Lead Front-End y creador de SaaS. Código, datos, 3D y música.</p>
+        <div class="hero__ctas">
+          <a class="btn" href="#hablemos">Cuéntame tu proyecto <iconify-icon icon="solar:arrow-right-linear" aria-hidden="true"></iconify-icon></a>
+          <a class="btn btn--ghost" href="#laboratorio">Ver lo que he construido</a>
+        </div>
+      </div>
+      <div class="hero__readout mono" aria-hidden="true">
+        <span><b>CH1</b> señal</span><span data-readout="freq">440.0 Hz</span><span data-readout="amp">9 mV</span><span class="hero__hint">Toca la onda</span>
+      </div>
+      <p class="hero__scroll mono" aria-hidden="true"><span></span>scroll</p>
+    </section>
+
+    <!-- 01 ORIGEN -->
+    <section class="chapter chapter--left" id="origen" data-accent="#9be7c4" data-station="1" data-kind="drones" data-ch="01" data-name="Origen" aria-labelledby="origen-title">
+      <p class="eyebrow">01 — Origen · UGR + UNED</p>
+      <h2 id="origen-title" data-split>Aprendí programando cosas que se mueven.</h2>
+      <figure class="portrait">
+        <button type="button" class="portrait__btn" aria-label="Saludar al perro"><img src="/adrian.jpg" width="460" height="460" alt="Adrián tumbado en la arena de la playa, con su perro sentado encima de su cabeza." loading="lazy" decoding="async" /></button>
+        <figcaption class="mono">fig. 01 — el ingeniero y su jefe de proyecto</figcaption>
+      </figure>
+      <p class="lede">Ingeniería Informática en la UGR y Máster en Ingeniería y Ciencia de Datos en la UNED.</p>
+      <ul class="log">
+        <li><span class="mono">Formación</span><strong>Informática + Ciencia de Datos</strong>IA, gráficos, sistemas distribuidos.</li>
+        <li><span class="mono">Experimentos</span><strong>Robots, drones y juegos</strong>ROS, Unity, Unreal, game jams.</li>
+        <li><span class="mono">Donde se cruzan</span><strong>Código que escucha</strong>Detección de BPM y música generativa.</li>
+      </ul>
+    </section>
+
+    <!-- 02 OFICIO -->
+    <section class="chapter chapter--right" id="oficio" data-accent="#ffb23e" data-station="-1" data-kind="logistics" data-ch="02" data-name="Oficio" aria-labelledby="oficio-title">
+      <p class="eyebrow">02 — Oficio · Satinel System</p>
+      <h2 id="oficio-title" data-split>Hoy muevo camiones, contenedores y puertos.</h2>
+      <p class="lede">Lead Front-End en <a href="https://satinel-system.com/" target="_blank" rel="noopener">Satinel System</a>, construyendo <a href="https://go-planner.com/" target="_blank" rel="noopener">Go!Planner</a>: TMS + ERP para transporte y puertos.</p>
+      <dl class="facts">
+        <div><dt class="mono">Producto</dt><dd>TMS + ERP modular</dd></div>
+        <div><dt class="mono">Dentro</dt><dd>Rutas con IA · tracking en vivo · app de conductor</dd></div>
+        <div><dt class="mono">Mi parte</dt><dd>Arquitectura front-end · Angular + Next.js</dd></div>
+      </dl>
+      <a class="link-arrow" href="https://go-planner.com/" target="_blank" rel="noopener">go-planner.com <iconify-icon icon="solar:arrow-right-up-linear" aria-hidden="true"></iconify-icon></a>
+    </section>
+
+    <!-- 03 LABORATORIO -->
+    <section class="chapter lab" id="laboratorio" data-accent="#c79bff" data-ch="03" data-name="Laboratorio" aria-labelledby="lab-title">
+      <p class="eyebrow">03 — Laboratorio · Productos propios</p>
+      <h2 id="lab-title" data-split>Cuatro productos, cuatro problemas reales.</h2>
+      <p class="lede">Productos propios, de la idea al primer cliente.</p>
+      <ol class="projects">
+        <li class="project" data-accent="#6ea8ff" data-station="1" data-kind="legal">
+          <span class="project__n mono">03.1</span>
+          <h3>Slawly</h3>
+          <p class="project__tag">«Tu despacho al día, tus clientes informados.»</p>
+          <p>Abogados verificados para clientes y software de gestión para despachos.</p>
+          <p class="project__stack mono">Legaltech · Marketplace · SaaS</p>
+          <a class="link-arrow" href="https://slawly.com/es" target="_blank" rel="noopener">slawly.com <iconify-icon icon="solar:arrow-right-up-linear" aria-hidden="true"></iconify-icon></a>
+        </li>
+        <li class="project" data-accent="#ffb23e" data-station="-1" data-kind="bakery">
+          <span class="project__n mono">03.2</span>
+          <h3>pan-flow</h3>
+          <p class="project__tag">«Gestión integral para panaderías y obradores.»</p>
+          <p>Del pedido al horno y del horno al reparto, sin hojas de cálculo.</p>
+          <p class="project__stack mono">Operaciones · Rutas · Facturación</p>
+          <a class="link-arrow" href="https://pan-flow.com/" target="_blank" rel="noopener">pan-flow.com <iconify-icon icon="solar:arrow-right-up-linear" aria-hidden="true"></iconify-icon></a>
+        </li>
+        <li class="project" data-accent="#9be7c4" data-station="1" data-kind="crawler">
+          <span class="project__n mono">03.3</span>
+          <h3>Workrawler</h3>
+          <p class="project__tag">«Los empleadores que te necesitan ya están publicando.»</p>
+          <p>Encuentra empresas que están contratando y te las entrega cada mañana.</p>
+          <p class="project__stack mono">Crawling · IA · Prospección</p>
+          <a class="link-arrow" href="https://www.workrawler.com/" target="_blank" rel="noopener">workrawler.com <iconify-icon icon="solar:arrow-right-up-linear" aria-hidden="true"></iconify-icon></a>
+        </li>
+        <li class="project" data-accent="#ff6f91" data-station="-1" data-kind="qr">
+          <span class="project__n mono">03.4</span>
+          <h3>QRasca</h3>
+          <p class="project__tag">«Premios que se rascan. Tarjetas que se sellan.»</p>
+          <p>Rasca-y-gana y tarjetas de sellos con QR para el comercio de barrio. Sin app.</p>
+          <p class="project__stack mono">Fidelización · QR · Antifraude</p>
+          <a class="link-arrow" href="https://www.qrasca.com/" target="_blank" rel="noopener">qrasca.com <iconify-icon icon="solar:arrow-right-up-linear" aria-hidden="true"></iconify-icon></a>
+        </li>
+      </ol>
+    </section>
+
+    <!-- 04 CAPACIDADES -->
+    <section class="chapter caps" id="capacidades" data-accent="#ff5b1f" data-ch="04" data-name="Capacidades" aria-labelledby="caps-title">
+      <p class="eyebrow">04 — Capacidades</p>
+      <h2 id="caps-title" data-split>Sintoniza la señal.</h2>
+      <p class="lede">Pulsa una y mira el terreno.</p>
+      <div class="tuner" role="group" aria-label="Disciplinas">
+        <button class="tune" type="button" data-shape="0" aria-pressed="true">
+          <span class="mono">A</span><strong>Front-end y producto</strong>
+          <small>Angular · Next.js · React · TypeScript</small>
+        </button>
+        <button class="tune" type="button" data-shape="1" aria-pressed="false">
+          <span class="mono">B</span><strong>SaaS de punta a punta</strong>
+          <small>Datos · APIs · auth · pagos · despliegue</small>
+        </button>
+        <button class="tune" type="button" data-shape="2" aria-pressed="false">
+          <span class="mono">C</span><strong>Datos e IA aplicada</strong>
+          <small>Python · LLMs · OCR · crawling</small>
+        </button>
+        <button class="tune" type="button" data-shape="3" aria-pressed="false">
+          <span class="mono">D</span><strong>Interactivo y 3D</strong>
+          <small>Three.js · WebGL · Unity · audio</small>
+        </button>
+      </div>
+    </section>
+
+    <!-- 05 ATHETOSIS -->
+    <section class="chapter music" id="athetosis" data-accent="#ff2e63" data-ch="05" data-name="Athetosis" data-station="1" data-kind="music" aria-labelledby="music-title">
+      <p class="eyebrow">05 — Athetosis · Música</p>
+      <h2 id="music-title" data-split>Cuando cierro el editor, enciendo las máquinas.</h2>
+      <p class="lede"><strong>Athetosis</strong>: electrónica entre el hip hop y lo experimental. Te he construido una caja de ritmos. Tócala. <kbd>A</kbd>–<kbd>K</kbd> sinte.</p>
+      <div class="machine" data-machine role="region" aria-label="ATH-16, caja de ritmos y sintetizador interactivo">
+        <noscript><p class="mono">Activa JavaScript para tocar la ATH-16.</p></noscript>
+      </div>
+      <div class="spotify" data-src="https://open.spotify.com/embed/artist/19pEcm8vuduzyoxEa3B20y?utm_source=generator&amp;theme=0">
+        <a class="btn btn--ghost btn--lead" href="https://open.spotify.com/intl-es/artist/19pEcm8vuduzyoxEa3B20y" target="_blank" rel="noopener"><iconify-icon icon="solar:music-note-2-bold" aria-hidden="true"></iconify-icon> Escuchar Athetosis aquí</a>
+        <p class="spotify__note mono">Carga el reproductor de Spotify, que puede usar sus propias cookies.</p>
+      </div>
+    </section>
+
+    <!-- 06 ARCADE -->
+    <section class="chapter arcade" id="arcade" data-accent="#9be7c4" data-ch="06" data-name="Arcade" aria-labelledby="arcade-title">
+      <p class="eyebrow">06 — Arcade · Insert coin</p>
+      <h2 id="arcade-title" data-split>Antes de los SaaS, los videojuegos.</h2>
+      <p class="lede">A 174 BPM. Vuela, recoge tecnologías, esquiva bugs.</p>
+      <div class="game">
+        <canvas class="game__canvas" tabindex="0" role="img" aria-label="Signal Run: juego de un dron que vuela entre dos ondas. Pulsa espacio o mantén pulsado para subir."></canvas>
+        <div class="game__crt" aria-hidden="true"></div>
+        <div class="game__actions">
+          <button type="button" class="btn game__start">Jugar <iconify-icon icon="solar:gamepad-bold" aria-hidden="true"></iconify-icon></button>
+          <a class="btn btn--ghost game__cta" href="#hablemos" hidden>¿Hacemos algo así para ti? <iconify-icon icon="solar:arrow-right-linear" aria-hidden="true"></iconify-icon></a>
+        </div>
+        <button type="button" class="game__music mono" aria-pressed="true"><iconify-icon icon="solar:music-notes-bold" aria-hidden="true"></iconify-icon><span>Música: DnB</span></button>
+        <p class="game__live visually-hidden" role="status" aria-live="polite"></p>
+      </div>
+      <p class="game__help mono"><kbd>Espacio</kbd> / <kbd>↑</kbd> subir · <kbd>M</kbd> música · <span class="game__hotfix">HOTFIX</span> = escudo</p>
+    </section>
+
+    <!-- 07 HABLEMOS -->
+    <section class="chapter contact" id="hablemos" data-accent="#ff5b1f" data-ch="07" data-name="Hablemos" aria-labelledby="contact-title">
+      <p class="eyebrow">07 — Hablemos</p>
+      <h2 id="contact-title" data-split>¿Tienes algo que necesita moverse?</h2>
+      <p class="lede">Cuéntame qué quieres construir. Te respondo yo.</p>
+      <form class="form" novalidate>
+        <fieldset class="form__chips">
+          <legend class="mono">Qué necesitas</legend>
+          <label><input type="checkbox" name="tipo" value="Plataforma SaaS / web app" /><span>SaaS / web app</span></label>
+          <label><input type="checkbox" name="tipo" value="MVP" /><span>MVP</span></label>
+          <label><input type="checkbox" name="tipo" value="Automatización / IA" /><span>Automatización / IA</span></label>
+          <label><input type="checkbox" name="tipo" value="Web interactiva / 3D" /><span>Web interactiva / 3D</span></label>
+          <label><input type="checkbox" name="tipo" value="Front-end / consultoría" /><span>Front-end / consultoría</span></label>
+        </fieldset>
+        <div class="form__row">
+          <label class="field"><span class="mono">Nombre</span><input name="nombre" autocomplete="name" required maxlength="80" /></label>
+          <label class="field"><span class="mono">Email</span><input name="email" type="email" autocomplete="email" required maxlength="120" /></label>
+        </div>
+        <label class="hp" aria-hidden="true">Web <input name="web" tabindex="-1" autocomplete="off" /></label>
+        <label class="field"><span class="mono">El proyecto</span><textarea name="mensaje" rows="4" required minlength="20" maxlength="2000" placeholder="Qué quieres construir, para quién y para cuándo."></textarea></label>
+        <div class="form__foot">
+          <button class="btn" type="submit">Enviar <iconify-icon icon="solar:plain-2-linear" aria-hidden="true"></iconify-icon></button>
+          <p class="form__status mono" role="status" aria-live="polite"></p>
+        </div>
+        <p class="form__legal mono">Solo uso tus datos para responderte. <a href="/legal/#privacidad">Privacidad</a></p>
+      </form>
+      <ul class="direct">
+        <li><a href="mailto:adri95cadiz@gmail.com"><iconify-icon icon="solar:letter-linear" aria-hidden="true"></iconify-icon>adri95cadiz@gmail.com</a></li>
+        <li><a href="https://www.linkedin.com/in/adrianportillosanchez/" target="_blank" rel="noopener"><iconify-icon icon="solar:user-id-linear" aria-hidden="true"></iconify-icon>LinkedIn</a></li>
+        <li><a href="https://github.com/adri95cadiz" target="_blank" rel="noopener"><iconify-icon icon="solar:code-square-linear" aria-hidden="true"></iconify-icon>GitHub</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p class="mono">© <span data-year>2026</span> Adrián Portillo Sánchez · Cádiz</p>
+    <p class="mono">Hecho a mano con Three.js, GSAP y Lenis. Sin plantillas. <a href="https://github.com/adri95cadiz/portfolio" target="_blank" rel="noopener">Código en GitHub</a> · <a href="/legal/">Aviso legal y privacidad</a></p>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

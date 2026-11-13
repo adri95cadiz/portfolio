@@ -1,0 +1,21 @@
+/* Legal pages: same tokens and type as the site, plain reading layout, no 3D or scripts. */
+@import '@fontsource-variable/anybody/wdth.css';
+@import '@fontsource-variable/martian-mono/wdth.css';
+@import './style.css';
+
+.legal { max-width: 46rem; margin: 0 auto; padding: 120px var(--gutter) 80px; }
+.legal h1 { font-size: clamp(2.4rem, 1rem + 4vw, 4rem); margin-bottom: 12px; }
+.legal h2 { font-size: 1.6rem; margin: 56px 0 14px; padding-top: 20px; border-top: 1px solid var(--line); }
+.legal p, .legal li { color: var(--bone-dim); line-height: 1.65; }
+.legal p { margin: 0 0 14px; }
+.legal ul { padding-left: 1.2rem; }
+.legal strong { color: var(--bone); font-weight: 600; }
+.legal a { color: var(--bone); text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.legal dl { display: grid; grid-template-columns: 11rem 1fr; gap: 10px 20px; margin: 0 0 14px; }
+.legal dt { font-family: var(--f-mono); font-size: var(--t-mono); text-transform: uppercase; color: var(--accent); padding-top: 3px; }
+.legal dd { margin: 0; color: var(--bone-dim); }
+.legal__top { position: fixed; inset: 0 0 auto; z-index: 5; display: flex; justify-content: space-between; align-items: center; padding: 18px var(--gutter); background: linear-gradient(var(--ink) 60%, transparent); }
+.legal__top a { font-family: var(--f-mono); font-size: var(--t-mono); text-transform: uppercase; color: var(--bone-dim); text-decoration: none; }
+.legal__top a:hover { color: var(--accent); }
+.legal__updated { font-family: var(--f-mono); font-size: var(--t-mono); color: var(--bone-dim); text-transform: uppercase; }
+@media (max-width: 700px) { .legal dl { grid-template-columns: 1fr; gap: 2px; } .legal dd { margin-bottom: 10px; } }
