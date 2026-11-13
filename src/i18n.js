@@ -5,7 +5,7 @@ export const lang = document.documentElement.lang === 'en' ? 'en' : 'es';
 /** JS-generated strings, both languages. */
 const STRINGS = {
   es: {
-    'ach.start.h': 'Todo viaje empieza moviéndose.', 'ach.boss.h': 'El verdadero jefe no sale en el organigrama.', 'ach.tuner.h': 'Cada disciplina suena distinta.', 'ach.beat.h': 'Las máquinas también quieren sonar.', 'ach.producer.h': 'Los patrones de fábrica están bien. Los tuyos, mejor.', 'ach.glitch.h': 'Algunos errores suenan mejor a todo volumen.', 'ach.pilot.h': 'Tres cifras en el marcador.', 'ach.explorer.h': 'No te saltes ningún capítulo.', 'ach.demolition.h': 'El decorado no es tan sólido como parece.', 'ach.konami.h': 'El código más famoso de los videojuegos.', 'ach.contact.h': 'Toda buena partida termina con un mensaje.',
+    'ach.start.h': 'Todo viaje empieza moviéndose.', 'ach.boss.h': 'El verdadero jefe no sale en el organigrama.', 'ach.tuner.h': 'Cada disciplina suena distinta.', 'ach.beat.h': 'Las máquinas también quieren sonar.', 'ach.producer.h': 'Los mejores patrones son los tuyos.', 'ach.glitch.h': 'Algunos errores suenan mejor a todo volumen.', 'ach.pilot.h': 'Tres cifras en el marcador.', 'ach.explorer.h': 'No te saltes ningún capítulo.', 'ach.demolition.h': 'El decorado no es tan sólido como parece.', 'ach.konami.h': 'El código más famoso de los videojuegos.', 'ach.contact.h': 'Toda buena partida termina con un mensaje.',
     'ach.unlocked': 'Logro desbloqueado', 'ach.locked': 'Bloqueado', 'ach.keep': 'Sigue explorando.',
     'ach.start.t': 'Pulsa Start', 'ach.start.d': 'Empezaste el viaje.',
     'ach.boss.t': 'Jefe de proyecto', 'ach.boss.d': 'Saludaste al perro.',
@@ -35,7 +35,7 @@ const STRINGS = {
     'lcd.msgs': 'Compilando ideas|Café nº 3|174 BPM en bucle|Respondo en 24 h|Perro: dormido|Sin bugs (creo)', 'lcd.coords': '40.4°N 3.7°W',
   },
   en: {
-    'ach.start.h': 'Every journey starts by moving.', 'ach.boss.h': 'The real boss isn’t on the org chart.', 'ach.tuner.h': 'Every discipline sounds different.', 'ach.beat.h': 'Machines want to be heard too.', 'ach.producer.h': 'Factory patterns are fine. Yours are better.', 'ach.glitch.h': 'Some errors sound better turned all the way up.', 'ach.pilot.h': 'Three digits on the scoreboard.', 'ach.explorer.h': 'Don’t skip a chapter.', 'ach.demolition.h': 'The scenery isn’t as solid as it looks.', 'ach.konami.h': 'The most famous cheat code in video games.', 'ach.contact.h': 'Every good game ends with a message.',
+    'ach.start.h': 'Every journey starts by moving.', 'ach.boss.h': 'The real boss isn’t on the org chart.', 'ach.tuner.h': 'Every discipline sounds different.', 'ach.beat.h': 'Machines want to be heard too.', 'ach.producer.h': 'The best patterns are your own.', 'ach.glitch.h': 'Some errors sound better turned all the way up.', 'ach.pilot.h': 'Three digits on the scoreboard.', 'ach.explorer.h': 'Don’t skip a chapter.', 'ach.demolition.h': 'The scenery isn’t as solid as it looks.', 'ach.konami.h': 'The most famous cheat code in video games.', 'ach.contact.h': 'Every good game ends with a message.',
     'ach.unlocked': 'Achievement unlocked', 'ach.locked': 'Locked', 'ach.keep': 'Keep exploring.',
     'ach.start.t': 'Press Start', 'ach.start.d': 'You started the journey.',
     'ach.boss.t': 'Project manager', 'ach.boss.d': 'You said hi to the dog.',
