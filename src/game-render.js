@@ -1,8 +1,10 @@
 import { t } from './i18n.js';
 // SIGNAL RUN — drawing. Pure functions of the game state; no game logic lives here.
-export const W = 960;
-export const H = 400;
-export const DRONE_X = 200;
+// playfield size in game units; live bindings, switched by setDims() for narrow screens
+export let W = 960;
+export let H = 400;
+export let DRONE_X = 200;
+export function setDims(w, h) { W = w; H = h; DRONE_X = Math.round(w * 0.21); }
 export const C = { ink: '#0c0d10', ink2: '#121419', bone: '#ece6da', dim: '#6f6a61', bug: '#ff4d6d', mint: '#9be7c4', pink: '#ff2e63' };
 const BARS = 48;
 
@@ -147,20 +149,25 @@ function screens(g, s, best) {
   if (s.mode === 'idle') {
     g.fillStyle = 'rgba(12,13,16,0.55)'; g.fillRect(0, 0, W, H);
     glitchText(g, 'SIGNAL RUN', W / 2, H / 2 - 30, 68, s.beat);
-    text(g, t('game.hint'), W / 2, H / 2 + 8, { size: 15, weight: 500, color: C.dim, fam: MONO });
-    if (Math.sin(s.t * 5) > 0) text(g, t('game.press'), W / 2, H / 2 + 44, { size: 14, weight: 500, color: C.mint, fam: MONO });
+    // on the narrow playfield the hint wraps one instruction per line
+    const hints = W < 800 ? t('game.hint').split(' · ') : [t('game.hint')];
+    hints.forEach((line, i) => text(g, line, W / 2, H / 2 + 12 + i * 24, { size: 15, weight: 500, color: C.dim, fam: MONO }));
+    if (Math.sin(s.t * 5) > 0) text(g, t('game.press'), W / 2, H / 2 + 36 + hints.length * 24, { size: 14, weight: 500, color: C.mint, fam: MONO });
   }
   if (s.mode === 'over') {
     g.fillStyle = 'rgba(12,13,16,0.72)'; g.fillRect(0, 0, W, H);
     glitchText(g, t('game.lost'), W / 2, 110, 52, 0.4);
     const rows = [[t('game.points'), s.score], [t('game.techs'), s.orbs], [t('game.combo'), `×${s.bestCombo}`], [t('game.zone'), zoneName(s)]];
+    const narrow = W < 800; // 2×2 stats on the portrait playfield
     rows.forEach(([k, v], i) => {
-      const x = W / 2 - 270 + i * 180;
-      text(g, k, x, 165, { size: 11, weight: 500, color: C.dim, fam: MONO });
-      text(g, String(v), x, 198, { size: 26 });
+      const x = narrow ? W / 2 + (i % 2 ? 130 : -130) : W / 2 - 270 + i * 180;
+      const y = narrow ? 200 + Math.floor(i / 2) * 90 : 165;
+      text(g, k, x, y, { size: 11, weight: 500, color: C.dim, fam: MONO });
+      text(g, String(v), x, y + 33, { size: 26 });
     });
-    if (s.newBest) text(g, t('game.newBest'), W / 2, 238, { size: 14, weight: 500, color: C.mint, fam: MONO, alpha: Math.sin(s.t * 8) > 0 ? 1 : 0.4 });
-    else text(g, `${t('game.best')} ${best}`, W / 2, 238, { size: 12, weight: 500, color: C.dim, fam: MONO });
+    const by = narrow ? 420 : 238;
+    if (s.newBest) text(g, t('game.newBest'), W / 2, by, { size: 14, weight: 500, color: C.mint, fam: MONO, alpha: Math.sin(s.t * 8) > 0 ? 1 : 0.4 });
+    else text(g, `${t('game.best')} ${best}`, W / 2, by, { size: 12, weight: 500, color: C.dim, fam: MONO });
   }
 }
 

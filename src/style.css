@@ -288,7 +288,7 @@ html { scrollbar-color: var(--bone) #08090b; scrollbar-width: thin; }
 
 /* ---------- chapters ---------- */
 main { position: relative; z-index: 1; }
-.chapter { position: relative; min-height: 140vh; padding: 22vh var(--gutter) 18vh; display: grid; align-content: start; gap: 28px; }
+.chapter { position: relative; min-height: 140vh; padding: 22vh var(--gutter) 18vh; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 28px; }
 .chapter > * { max-width: 46rem; }
 .chapter--right { justify-items: end; }
 .chapter--right > * { text-align: left; }
@@ -311,7 +311,9 @@ main { position: relative; z-index: 1; }
 .caps::before { background: radial-gradient(75% 60% at 50% 45%, rgb(12 13 16 / 0.8), rgb(12 13 16 / 0) 80%) !important; }
 .log li, .facts dd { text-shadow: 0 1px 2px var(--ink), 0 0 18px var(--ink); }
 @media (max-width: 900px) {
-  .chapter:not(.hero)::before, .chapter--right::before { background: rgb(12 13 16 / 0.7) !important; }
+  /* light veil on phones: the 3D has to stay visible; copy gets a text shadow instead */
+  .chapter:not(.hero)::before, .chapter--right::before { background: linear-gradient(rgb(12 13 16 / 0.55), rgb(12 13 16 / 0.25) 45%, rgb(12 13 16 / 0.45)) !important; }
+  .chapter p, .chapter h2, .chapter li, .chapter dd { text-shadow: 0 1px 2px var(--ink), 0 0 16px var(--ink); }
 }
 
 /* hero */
@@ -596,7 +598,7 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-radius: 4px; text-
   .trophy__bar { display: none; }
   .nav__name { display: none; }
   .nav { gap: 10px; }
-  .projects { gap: 10vh; }
+  .projects { gap: 70vh; } /* room between cards so each project's 3D diorama shows up while scrolling */
   .project:nth-child(even) { justify-self: stretch; }
   .log li { grid-template-columns: 1fr; }
   .log span { grid-row: auto; }
@@ -621,3 +623,11 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-radius: 4px; text-
 .is-og .hero { padding-top: 9vh; }
 /* freeze "mueve." mid-glitch (both slices visible) so every capture shows the cut */
 .is-og .glitch::before, .is-og .glitch::after { animation-delay: -3.75s !important; animation-play-state: paused !important; }
+
+/* phones: skills as a 2×2 grid (kept last so it wins over the base .tuner/.tune rules) */
+@media (max-width: 900px) {
+  .tuner { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tune { min-height: 0; padding: 14px; }
+  .tune strong { font-size: 1.05rem; }
+  .tune small { font-size: 0.8rem; }
+}

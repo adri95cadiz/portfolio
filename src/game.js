@@ -1,7 +1,11 @@
 // SIGNAL RUN — a rhythm runner: the ATH-16 plays DnB and the tunnel, spawns and visuals move on its beat.
 import { SFX, blip } from './sfx.js';
 import { t } from './i18n.js';
-import { render, W, H, DRONE_X, C } from './game-render.js';
+import { render, W, H, DRONE_X, C, setDims } from './game-render.js';
+
+const NARROW_PX = 700; // below this canvas width the playfield turns portrait-ish
+const WIDE_DIMS = [960, 400];
+const NARROW_DIMS = [640, 720];
 
 const R = 13;
 const GRAVITY = 980;
@@ -143,7 +147,7 @@ export function mountGame(root, { music, onGameOver } = {}) {
   }
 
   function updateWorld(dt) {
-    const speed = 270 + Math.min(s.t * 7, 260);
+    const speed = (270 + Math.min(s.t * 7, 260)) * (W / WIDE_DIMS[0]); // same crossing time on any playfield
     s.dist += speed * dt;
     s.score += Math.floor((s.dist % 40) < speed * dt ? 1 : 0);
     s.vy = Math.max(-MAX_VY, Math.min(MAX_VY, s.vy + (thrust ? THRUST : GRAVITY) * dt));
@@ -201,6 +205,12 @@ export function mountGame(root, { music, onGameOver } = {}) {
   function resize() {
     const dpr = Math.min(devicePixelRatio, 2);
     const w = canvas.clientWidth;
+    const [dw, dh] = w < NARROW_PX ? NARROW_DIMS : WIDE_DIMS;
+    if (dw !== W) {
+      setDims(dw, dh);
+      canvas.style.aspectRatio = `${dw} / ${dh}`;
+      if (s.mode !== 'play') reset(s.mode === 'over' ? 'idle' : s.mode);
+    }
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round((w * H / W) * dpr);
     g.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);

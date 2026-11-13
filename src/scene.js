@@ -228,8 +228,10 @@ export function createScene(canvas, { onContextLost } = {}) {
           stations.add(dioramas[i].group);
         }
         const d = dioramas[i];
-        PATH.getPointAt(MathUtils.clamp(progress * PATH_SPAN + STATION_LEAD, 0, 1), p);
-        d.group.position.set(p.x + side * d.offset, 0.5, p.z);
+        // narrow (portrait) views have a small horizontal FOV: pull dioramas toward the path and further ahead
+        const narrow = Math.min(1, Math.max(0.35, camera.aspect / 1.6));
+        PATH.getPointAt(MathUtils.clamp(progress * PATH_SPAN + STATION_LEAD + (1 - narrow) * 0.05, 0, 1), p);
+        d.group.position.set(p.x + side * d.offset * narrow, 0.5, p.z);
         d.group.rotation.y = side < 0 ? Math.PI : 0; // dioramas are authored for the right-hand side; mirror for the left
       });
     },
