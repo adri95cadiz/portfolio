@@ -43,14 +43,17 @@ function readConfig() {
   return { host: SMTP_HOST, port: Number(SMTP_PORT), user: SMTP_USER, pass: SMTP_PASS, to: CONTACT_TO || SMTP_USER, from: CONTACT_FROM || SMTP_USER };
 }
 
-async function readBody(req) {
+export async function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body; // Vercel already parsed it
-  let raw = '';
+  // collect bytes and decode once: a multi-byte char (á, ñ, emoji) can be split across chunks
+  const chunks = [];
+  let size = 0;
   for await (const chunk of req) {
-    raw += chunk;
-    if (raw.length > LIMITS.body) throw new Error('too large');
+    size += chunk.length;
+    if (size > LIMITS.body) throw new Error('too large');
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
   }
-  return JSON.parse(raw || '{}');
+  return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
 }
 
 function send(res, status, body) {

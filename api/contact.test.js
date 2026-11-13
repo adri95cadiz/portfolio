@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validate, rateLimited } from './contact.js';
+import { validate, rateLimited, readBody } from './contact.js';
 
 const good = { nombre: 'Ana', email: 'ana@empresa.es', mensaje: 'Quiero una plataforma para mi flota', tipos: ['MVP', 'hack'] };
 
@@ -22,6 +22,13 @@ test('strips newlines from the name so it cannot inject headers', () => {
 
 test('flags honeypot submissions as spam', () => {
   assert.deepEqual(validate({ ...good, web: 'http://spam' }), { ok: false, error: 'spam' });
+});
+
+test('decodes accents split across request chunks', async () => {
+  const bytes = Buffer.from(JSON.stringify({ mensaje: 'envío de prueba con ñ y acentos' }), 'utf8');
+  const cut = bytes.indexOf(0xc3) + 1; // split right inside the 2-byte "í"
+  const req = (async function* () { yield bytes.subarray(0, cut); yield bytes.subarray(cut); })();
+  assert.equal((await readBody(req)).mensaje, 'envío de prueba con ñ y acentos');
 });
 
 test('rate limits after 5 sends from one IP', () => {
