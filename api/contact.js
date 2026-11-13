@@ -95,7 +95,8 @@ export default async function handler(req, res) {
       to: cfg.to,
       replyTo: { name: nombre, address: email },
       subject: `Nuevo proyecto${tipos.length ? ` (${tipos.join(', ')})` : ''}: ${nombre}`,
-      text: `${mensaje}\n\n—\nNombre: ${nombre}\nEmail: ${email}\nTipo: ${tipos.join(', ') || 'sin especificar'}\nIP: ${ip}`,
+      // no IP here: it's personal data the privacy policy doesn't cover; it's only used in memory for rate limiting
+      text: `${mensaje}\n\n—\nNombre: ${nombre}\nEmail: ${email}\nTipo: ${tipos.join(', ') || 'sin especificar'}`,
     });
     return send(res, 200, { ok: true });
   } catch (err) {
