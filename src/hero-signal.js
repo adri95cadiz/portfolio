@@ -13,6 +13,8 @@ const STEP = 5; // px between wave samples
 const LOGO_SAMPLES = 260;
 const BEAM_PERIOD = 3.2; // seconds for the light beam to run the whole signal
 const BEAM_LEN = 0.016; // fraction of the trace lit by the beam
+// ?og renders the share image from the real hero (scripts/render-og.mjs): the beam is parked on the outgoing wave
+const OG_BEAM = new URLSearchParams(location.search).has('og') ? 0.78 : null;
 
 /** Samples the logo path into points (logo units) by arc length, so it can be drawn progressively. */
 function sampleLogo(d) {
@@ -171,7 +173,7 @@ export function mountHeroSignal(hero, { reduceMotion }) {
       g.fillStyle = '#ece6da';
       g.beginPath(); g.arc(hx, hy, px * 0.45, 0, Math.PI * 2); g.fill();
     } else if (!reduceMotion) { // a beam that keeps running along the signal
-      const a = ((t % BEAM_PERIOD) / BEAM_PERIOD) * total;
+      const a = (OG_BEAM ?? (t % BEAM_PERIOD) / BEAM_PERIOD) * total;
       stroke(segment(a, Math.min(total, a + total * BEAM_LEN)), '#ece6da', 0, 0, px * 0.42);
     }
     g.shadowBlur = 0;

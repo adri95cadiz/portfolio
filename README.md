@@ -65,7 +65,8 @@ src/hero-signal.js    Hero oscilloscope trace
 src/machine*.js       ATH-16 drum machine (engine + UI)
 src/game*.js          Signal Run (logic + rendering)
 api/contact.js        Contact form endpoint (+ tests)
-brand/                Logo kit, usage guide and share-image source
+brand/                Logo kit and usage guide
+scripts/              Icon subset + share images (captured from the real hero, ?og mode)
 legal/                Legal notice, privacy and cookies (ES/EN)
 ```
 

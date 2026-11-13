@@ -205,6 +205,7 @@ function initEasterEggs() {
 }
 
 function init() {
+  if (new URLSearchParams(location.search).has('og')) root.classList.add('is-og'); // share-image capture mode
   document.querySelector('[data-year]').textContent = new Date().getFullYear();
   initLangSwitch();
   initCursor({ reduceMotion });

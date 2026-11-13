@@ -1,14 +1,20 @@
-// Renders the share images from brand/og-source.html. Needs Playwright once: npm i -D playwright && npx playwright install chromium
-// node scripts/render-og.mjs brand/og-source.html public/og.png
-// node scripts/render-og.mjs brand/og-source.html public/og-en.png "?lang=en"
+// Renders the share images by capturing the real hero (?og mode) at 1200×630.
+// Needs Playwright once: npm i -D playwright && npx playwright install chromium
+// With the dev server running (npm run dev):  node scripts/render-og.mjs
 import { chromium } from 'playwright';
-import { pathToFileURL } from 'node:url';
-import { resolve } from 'node:path';
-const [, , htmlArg, out, query = ''] = process.argv;
-const html = resolve(htmlArg);
-const b = await chromium.launch();
-const p = await b.newPage({ viewport: { width: 1200, height: 630 } });
-await p.goto(pathToFileURL(html).href + query, { waitUntil: 'networkidle' });
-await p.waitForFunction(() => window.__ready === true);
-await p.screenshot({ path: out, type: 'png' });
-await b.close();
+
+const BASE = process.env.OG_BASE ?? 'http://localhost:5173';
+const SETTLE_MS = 9000; // intro + 3D fade-in, generous for software-rendered GPUs
+const shots = [['/?og', 'public/og.png', 'es-ES'], ['/en/?og', 'public/og-en.png', 'en-US']];
+
+const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+for (const [path, out, locale] of shots) {
+  const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, locale });
+  await page.goto(BASE + path, { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => document.documentElement.classList.contains('is-webgl'), null, { timeout: 30000 });
+  await page.waitForTimeout(SETTLE_MS);
+  await page.screenshot({ path: out });
+  console.log('wrote', out);
+  await page.close();
+}
+await browser.close();

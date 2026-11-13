@@ -615,3 +615,9 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-radius: 4px; text-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
 }
+
+/* ?og: the share image is a capture of the real hero, without chrome */
+.is-og .nav, .is-og .hud, .is-og .cursor, .is-og .toasts, .is-og .hero__scroll, .is-og .hero__ctas, .is-og .hero__hint { display: none !important; }
+.is-og .hero { padding-top: 9vh; }
+/* freeze "mueve." mid-glitch (both slices visible) so every capture shows the cut */
+.is-og .glitch::before, .is-og .glitch::after { animation-delay: -3.75s !important; animation-play-state: paused !important; }

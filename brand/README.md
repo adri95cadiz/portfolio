@@ -18,7 +18,7 @@ La versión principal añade **separación cromática**: dos copias desplazadas 
 | `svg/ap-favicon-small.svg` | Versión simplificada para 16–32 px: sin fantasmas y con trazo más grueso. |
 | `svg/ap-app-icon.svg`, `svg/ap-maskable.svg` | Icono de app y la versión maskable de Android (contenido dentro del 80 %). |
 | `png/*.png` | Exportaciones a 1024 px con transparencia. |
-| `og-source.html` | Fuente de `public/og.png`, la imagen de 1200×630 para compartir. |
+| `public/og.png`, `public/og-en.png` | Imágenes de 1200×630 para compartir. Son capturas del hero real en modo `?og` (sin barra ni cursor, con la balita y el glitch fijos): se regeneran con `node scripts/render-og.mjs` con el servidor de desarrollo arrancado. |
 
 Los iconos web en uso están en `public/`: `favicon.ico`, `favicon.svg`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `maskable-512.png` y `site.webmanifest`.
 
