@@ -77,4 +77,13 @@ export function initCursor({ reduceMotion }) {
   document.addEventListener('pointerup', () => el.classList.remove('is-down'));
   document.documentElement.addEventListener('pointerleave', () => el.classList.remove('is-on'));
   window.addEventListener('scroll', kick, { passive: true }); // keep the ring glued to a hovered key while scrolling
+
+  // modal dialogs live in the browser's top layer, above everything else: while one is open the cursor
+  // moves inside it so it stays on top, and goes back to <body> when it closes
+  const follow = () => {
+    const open = [...document.querySelectorAll('dialog[open]')].pop();
+    const host = open ?? document.body;
+    if (el.parentNode !== host) host.append(el);
+  };
+  new MutationObserver(follow).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['open'] });
 }
