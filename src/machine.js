@@ -1,4 +1,6 @@
 // ATH-16: a 16-step drum machine + monophonic bass synth, fully synthesized with Web Audio.
+import { getAudioContext } from './audio.js';
+
 export const TRACKS = ['kick', 'snare', 'hat', 'open', 'bass'];
 export const STEPS = 16;
 
@@ -32,10 +34,9 @@ export function createMachine({ onStep } = {}) {
   const queue = [];
 
   function boot() {
-    if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return true; }
-    const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return false;
-    ctx = new AC();
+    if (ctx) { getAudioContext(); return true; } // resumes the shared context if the browser suspended it
+    ctx = getAudioContext();
+    if (!ctx) return false;
     const comp = ctx.createDynamicsCompressor();
     comp.threshold.value = -14; comp.ratio.value = 4;
     master = ctx.createGain(); master.gain.value = 0.7;
@@ -203,6 +204,6 @@ export function createMachine({ onStep } = {}) {
       for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
       return Math.min(Math.sqrt(sum / buf.length) * 3.5, 1);
     },
-    close() { stop(); ctx?.close(); },
+    close() { stop(); }, // the AudioContext is shared site-wide, so it isn't closed here
   };
 }

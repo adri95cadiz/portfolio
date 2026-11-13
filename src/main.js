@@ -12,6 +12,7 @@ import { mountMachine } from './machine-ui.js';
 import { mountGame } from './game.js';
 import { initContact } from './contact.js';
 import { createAchievements } from './achievements.js';
+import './audio.js'; // registers the mobile audio unlock on the first tap/click/key
 import { SFX } from './sfx.js';
 import { mountHeroSignal } from './hero-signal.js';
 import { t, initLangSwitch } from './i18n.js';

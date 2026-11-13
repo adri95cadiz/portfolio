@@ -1,16 +1,7 @@
 // Synthesized UI sounds (no samples): chiptune blips, laser shots, explosions and the dog.
-let ctx = null;
-let noiseBuf = null;
+import { getAudioContext as audio } from './audio.js';
 
-function audio() {
-  if (!ctx) {
-    const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return null;
-    ctx = new AC();
-  }
-  if (ctx.state === 'suspended') ctx.resume();
-  return ctx;
-}
+let noiseBuf = null;
 
 function noise(a, t, len) {
   if (!noiseBuf) {
