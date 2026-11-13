@@ -631,3 +631,8 @@ kbd { padding: 1px 6px; border: 1px solid var(--line); border-radius: 4px; text-
   .tune strong { font-size: 1.05rem; }
   .tune small { font-size: 0.8rem; }
 }
+
+/* holding to fly must not start a text selection, the iOS callout or the magnifier */
+.game, .game *, .is-playing-game body {
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+}

@@ -126,6 +126,7 @@ export function mountGame(root, { music, onGameOver } = {}) {
   function crash() {
     if (s.mode !== 'play') return;
     s.mode = 'dying';
+    html.classList.remove('is-playing-game');
     s.dyingT = 0.9;
     s.shake = 1;
     s.flash = 1;
@@ -229,6 +230,8 @@ export function mountGame(root, { music, onGameOver } = {}) {
 
   function start() {
     reset('play');
+    html.classList.add('is-playing-game');
+    getSelection()?.removeAllRanges();
     startBtn.hidden = true;
     cta.hidden = true;
     live.textContent = t('game.running');
@@ -240,6 +243,9 @@ export function mountGame(root, { music, onGameOver } = {}) {
   }
 
   const isFlyKey = (e) => e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW';
+  // long-press on touch would select text / open the context menu over the game
+  for (const type of ['contextmenu', 'selectstart', 'dragstart']) root.addEventListener(type, (e) => e.preventDefault());
+  const html = document.documentElement;
   startBtn.addEventListener('click', start);
   canvas.addEventListener('pointerdown', (e) => { e.preventDefault(); if (s.mode === 'idle' || s.mode === 'over') start(); thrust = true; });
   window.addEventListener('pointerup', () => { thrust = false; });
