@@ -4,7 +4,7 @@
 
 # Señal · Adrián Portillo's portfolio
 
-**Live: [adrianportillo.vercel.app](https://adrianportillo.vercel.app)**
+**Live: [adrianportillo.is-a.dev](https://adrianportillo.is-a.dev)**
 
 A scroll-driven 3D story instead of a CV. A live oscilloscope signal writes the AP logo in the hero, the camera flies over a particle terrain past animated dioramas of each project, and along the way you can play a drum machine, fly a rhythm game, shoot the scenery and unlock achievements.
 
